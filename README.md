@@ -1,0 +1,3 @@
+# VerificaThread
+
+Backup Verifica
