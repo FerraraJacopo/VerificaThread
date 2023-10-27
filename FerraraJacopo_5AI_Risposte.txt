@@ -1,0 +1,60 @@
+Verifica TPSI - Jacopo Ferrara - 5AI - 27/10/2023
+
+Domande
+
+1. Un Thread in Java è il flusso di esecuzione di un programma.
+   I Thread sono chiamati anche processi leggeri poichè condividono gli stessi indirizzi di memoria.
+2. Lo scopo principale dell'utilizzo dei Thread in un'applicazione java è quello di
+   poter eseguire più istanze dello stesso programma nello stesso momento.
+3. La sincronizzazione e la cooperazione tra thread si ottiene gestendo l'accesso alle risorse tramite
+   semafori oppure utilizzando synchronized e i metodi wait() e notify().
+4. Quando un thread viene avviato utilizzando il metodo start() esso viene posto nella ready list dello scheduler.
+   Lo scheduler potrà scegliere randomicamente i thread da mettere poi nello stato running.
+5. I metodi yield() e sleep() sono utilizzati nella gestione dei thread. Yield è utilizzato 
+   per cedere ad altri thread le risorse (CPU) dopo che il thread chiamante ha svolto operazioni importanti dal 
+   punto di vista computazionale. Il metodo sleep() sospende l'esecuzione del thread per un periodo definito in millisecondi.
+6. Una race condition in Java si può evitare in 2 modi: dimostrando come non vi siano situazioni pericolose e quindi ogni
+   sezione del codice sia sicura oppure prevenendole tramite l'utilizzo della sincronizzazione dei thread.
+7. Un programma concorrente termina quando tutti i thread vanno nello stato di dead e quando non vi sono più
+   daemon thread in esecuzione (e di conseguenza può terminare il main).
+8. Un deadlock si verifica quando viene gestita male la sincronizzazione tra i thread. Le condizioni necessarie
+   affinché si verifichi sono: mutual exclusion, hold and wait, circular wait e la no preemption.
+   
+   
+Casi d'uso
+
+- La classe shared counter presenta una variabile di tipo int e tre metodi, uno per incrementare la variabile,
+  uno per decrementarla e infine uno che restituisce il valore attuale di count. Un istanza di shared counter
+  verrà presubilmente passata nel costruttore di uno o più thread il quale/i quali potranno aumentare o diminuire il valore
+  della variabile. 
+
+- I problemi che si potrebbero avere in un ambiente multi-thread riguardano il valore
+assunto dalla variabile modificata nella risorsa condivisa (count). Più thread potrebbero
+infatti accedere contemporaneamente allo stesso metodo (dato che non abbiamo la sincronizzazione).
+Ad esempio il metodo increment potrebbe essere utilizzato contemporaneamente da due thread che incrementerebbero così il valore solo di 1
+unità. In questo caso, nel blocco di codice count++(count = count + 1) i thread leggerebbero tutti lo stesso valore.
+
+Provando a rappresentare il problema su IntelliJ l'output con tre thread che incrementano il valore di 1000
+l'output dovrebbe essere 3000. E ogni numero stampato dovrebbe essere sequenziale. Abbiamo invece: 
+
+1
+2
+3
+4
+6
+7
+8
+9
+5
+11
+12
+13 
+
+
+Per risolvere i problemi nella classe SharedCounter bisognerebbe renderla una classe monitor. Per farlo
+è necessario sincronizzare tutti i suoi metodi, tramite il blocco synchronized oppure specificandolo direttamente
+nella firma del metodo. Potrebbero anche essere d'aiuto i semafori. In questo caso il bisognerebbe utilizzare semaphore.acquire() all'entrata di ogni metodo.
+Dopo la modifica di count è necessario però rilasciare il lock acquisito con semaphore.release() per evitare problemi di deadlock.
+
+Il test di questo codice si potrebbe eseguire temporizzando randomicamente i thread con delle sleep().   
+    
